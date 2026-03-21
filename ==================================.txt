@@ -33,7 +33,6 @@ body {
   color: var(--color-white);
   overflow-x: hidden;
   line-height: 1.6;
-  font-size: 18px; /* Mobile first: texto mínimo a 18px */
 }
 
 /* Canvas Particle Background */
@@ -97,15 +96,12 @@ body {
   backdrop-filter: blur(6px);
   z-index: 1000;
   transition: var(--transition-smooth);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .navbar.scrolled {
-  background: linear-gradient(to right, #1a1612, #2c241c, #1a1612);
-  border-bottom: 2px solid var(--color-gold);
+  background: rgba(0, 0, 0, 0.9);
   padding: 12px 30px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
 }
 
 .nav-container {
@@ -160,17 +156,16 @@ body {
 .nav-toggle {
   display: none;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px; /* target táctil enorme */
-  z-index: 2001;
+  padding: 5px;
 }
 
 .nav-toggle span {
-  width: 30px;
-  height: 3px;
+  width: 25px;
+  height: 2px;
   background: var(--color-gold);
   transition: var(--transition-smooth);
 }
@@ -327,75 +322,12 @@ body {
   background: var(--color-gray);
   border-radius: 15px;
   padding: 25px;
-  transition: box-shadow 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+  transition: var(--transition-smooth);
   transform-style: preserve-3d;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(212, 175, 55, 0.1);
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.product-image-container {
-  width: calc(100% + 50px);
-  margin: -25px -25px 20px -25px;
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-.product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.product-image.placeholder-img {
-  opacity: 0.5;
-  object-fit: contain;
-  padding: 20px;
-}
-
-.product-card:hover .product-image:not(.placeholder-img) {
-  transform: scale(1.05);
-}
-
-.product-image-container.placeholder {
-  background: radial-gradient(circle at center, var(--color-gray-soft), var(--color-black-dark));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-short-desc {
-  font-size: 0.95rem;
-  color: var(--color-gold);
-  opacity: 0.8;
-  margin-bottom: 20px;
-  font-style: italic;
-  line-height: 1.4;
-}
-
-.consult-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px solid var(--color-gold);
-  color: var(--color-gold);
-  padding: 10px;
-  border-radius: 5px;
-  font-family: var(--font-display);
-  cursor: pointer;
-  transition: var(--transition-smooth);
-  font-size: 1.1rem;
-}
-
-.consult-btn:hover {
-  background: var(--color-gold);
-  color: var(--color-black);
 }
 
 .product-card::before {
@@ -411,6 +343,7 @@ body {
 }
 
 .product-card:hover {
+  transform: perspective(var(--perspective)) translateZ(30px) rotateY(8deg);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
 }
 
@@ -457,12 +390,13 @@ body {
 /* Card entrance animation */
 .product-card {
   opacity: 0;
-  transition: opacity 0.5s ease, box-shadow 0.5s ease;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .product-card.visible {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
 .products-grid .product-card:nth-child(1) { transition-delay: 0.1s; }
@@ -520,32 +454,24 @@ body {
   }
   
   .nav-menu {
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 100%;
     left: 0;
     width: 100%;
-    height: 100vh;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #1a1612 0%, #2c241c 100%);
+    background: rgba(0, 0, 0, 0.95);
     padding: 20px;
-    gap: 40px;
+    gap: 15px;
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
     transition: var(--transition-smooth);
-    z-index: 2000;
   }
   
   .nav-menu.active {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
-  }
-
-  .nav-link {
-    font-size: 2rem;
   }
   
   .hero-title {
@@ -563,24 +489,18 @@ body {
   }
   
   .hero-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
     letter-spacing: 2px;
   }
   
   .hero-btn {
-    padding: 15px 30px;
-    font-size: 1.1rem;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 12px 30px;
+    font-size: 0.85rem;
   }
   
   .products-grid {
     grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .product-image-container {
-    height: 350px; /* Imagen MUY prominente en móviles */
+    gap: 20px;
   }
   
   .section-title {
@@ -622,268 +542,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gold);
-}
-
-/* ========================================
-   MODAL DE PRODUCTO (Códice Antiguo)
-   ======================================== */
-.product-modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 2000;
-  display: flex;
-  align-items: center; justify-content: center;
-  opacity: 0; visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-  padding: 20px;
-}
-
-.product-modal-overlay.active {
-  opacity: 1; visibility: visible;
-}
-
-.product-modal-content {
-  position: relative;
-  max-width: 900px; width: 100%;
-  max-height: 90vh;
-  background: linear-gradient(135deg, #f4e4bc 0%, #e3ce9a 100%);
-  border-radius: 4px; 
-  border: 2px solid #d4af37; /* bordes dorados */
-  box-shadow: inset 0 0 50px rgba(60, 40, 20, 0.3), 0 20px 50px rgba(0,0,0,0.8);
-  transform: scale(0.95) translateY(20px);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow-y: auto;
-  color: #2c1e16;
-}
-
-.product-modal-overlay.active .product-modal-content {
-  transform: scale(1) translateY(0);
-}
-
-.modal-close {
-  position: absolute;
-  top: 15px; right: 20px;
-  background: none; border: none;
-  font-size: 2.5rem; color: #5a462b;
-  cursor: pointer;
-  z-index: 10;
-  transition: transform 0.3s;
-  font-family: var(--font-display);
-}
-.modal-close:hover { transform: scale(1.2) rotate(90deg); color: #8b0000; }
-
-.modal-layout {
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 400px;
-}
-
-.modal-image-col {
-  flex: 1; min-width: 300px;
-  border-right: 2px dashed rgba(90, 70, 43, 0.3);
-  padding: 30px;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.modal-image {
-  width: 100%; height: auto;
-  max-height: 400px; object-fit: contain;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
-  border-radius: 8px;
-}
-
-.modal-info-col {
-  flex: 1.2; min-width: 300px;
-  padding: 40px;
-  display: flex; flex-direction: column; justify-content: center;
-}
-
-.modal-title {
-  font-family: var(--font-display);
-  font-size: 2.5rem; color: #4a0000;
-  margin-bottom: 5px;
-  line-height: 1.1;
-  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-}
-
-.modal-size {
-  font-family: var(--font-body);
-  font-size: 1rem; color: #5a462b;
-  font-style: italic; margin-bottom: 15px;
-}
-
-.modal-divider {
-  width: 60px; height: 2px;
-  background: #8b0000;
-  margin: 15px 0 20px;
-}
-
-.modal-description {
-  font-family: var(--font-body);
-  font-size: 1.1rem; color: #1a1612; 
-  line-height: 1.6; margin-bottom: 25px;
-  font-weight: 600;
-}
-
-.modal-price {
-  font-family: var(--font-display);
-  font-size: 2rem; color: #8b0000;
-  font-weight: 700; margin-bottom: 30px;
-}
-
-.modal-wa-btn {
-  display: flex; width: 100%; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #128C7E, #075E54);
-  color: #fff; text-decoration: none;
-  padding: 18px 30px; font-size: 1.3rem; /* Listo pulgares grandes */
-  font-weight: bold; border-radius: 8px; /* Touch-friendly radius */
-  box-shadow: 0 4px 15px rgba(18, 140, 126, 0.4);
-  transition: all 0.3s ease;
-  font-family: var(--font-display); letter-spacing: 1px;
-}
-
-.modal-wa-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(18, 140, 126, 0.6);
-  background: linear-gradient(135deg, #25D366, #128C7E);
-}
-
-.wa-icon { font-size: 1.5rem; margin-right: 10px; }
-
-@media (max-width: 768px) {
-  .modal-layout { flex-direction: column; }
-  .modal-image-col { border-right: none; border-bottom: 2px dashed rgba(90, 70, 43, 0.3); padding: 20px; }
-  .modal-info-col { padding: 25px 20px; }
-  .modal-title { font-size: 2rem; }
-}
-
-/* ========================================
-   ADAPTACIÓN MOBILE (Celulares) - iCase
-   ======================================== */
-@media (max-width: 768px) {
-  
-  /* 1. Tipografía: Aumenta legibilidad base a 18px */
-  body {
-    font-size: 18px;
-  }
-
-  /* Modales: Ajusta el tamaño de los textos para que quepan bien */
-  .modal-description {
-    font-size: 1.05rem;
-  }
-
-  /* 2. Layout Estilo iCase: 1 columna, tarjetas crema, bordes 15px */
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 25px;
-  }
-
-  .product-card {
-    background: #fdfaf3; /* Crema / pergamino claro */
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid #d4af37; /* Borde fino dorado */
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .product-card-inner {
-    padding: 20px;
-    color: #1a1612; /* Texto oscuro */
-  }
-
-  .product-name {
-    color: #1a1612; /* Sobrescribir color dorado original para contrastar en crema */
-    font-size: 1.5rem;
-  }
-
-  .product-price {
-    color: #8b0000;
-  }
-  
-  .product-short-desc {
-    color: #3b2f25;
-    font-size: 1rem;
-    margin-bottom: 20px;
-    font-style: italic;
-  }
-
-  /* Imagen prominente 300px width 100% */
-  .product-image-container {
-    width: 100%;
-    margin: 0;
-    height: 300px; 
-    border-bottom: 1px solid #d4af37;
-  }
-  
-  .product-image {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-
-  /* Botón interior de la tarjeta */
-  .consult-btn {
-    width: 100%;
-    background: transparent;
-    border: 2px solid #5a462b;
-    color: #5a462b;
-    padding: 12px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    font-family: var(--font-display);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .consult-btn:hover {
-    background: #5a462b;
-    color: #fdfaf3;
-  }
-
-  /* 3. Botones Touch: Botón de WhatsApp más alto y de ancho completo para el pulgar */
-  .modal-wa-btn {
-    width: 100%;
-    min-height: 48px;
-    padding: 18px 20px;
-    box-sizing: border-box;
-    background: #25D366; /* Verde sólido oscuro / rico */
-  }
-
-  /* 4. Menú Superior: Distribución (Hamburguesa, Logo centrado) */
-  .nav-container {
-    justify-content: center;
-  }
-  
-  .nav-toggle {
-    display: flex;
-    position: absolute;
-    left: 20px;
-    z-index: 2001; /* Flotar siempre sobre el menú open */
-  }
-
-  .navbar {
-    padding: 10px 20px;
-    height: auto;
-  }
-  
-  .nav-menu {
-    top: 0;
-    left: 0; width: 100%; height: 100vh;
-    position: fixed;
-    justify-content: center; align-items: center;
-    background: linear-gradient(135deg, #1a1612 0%, #2c241c 100%);
-    z-index: 2000;
-  }
-  
-  /* Layout del Modal */
-  .modal-info-col {
-    padding: 20px 15px;
-  }
-  
-  .modal-image-col {
-    padding: 15px;
-  }
 }

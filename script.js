@@ -4,12 +4,13 @@
    ======================================== */
 
 // ========================================
-// PRODUCT DATA - MENÚ OFICIAL
+// CONFIGURATION & PRODUCT DATA
 // ========================================
+const telefonoWhatsApp = "5491160000000";
 
 const products = {
   tartas: [
-    { name: "Lemon Pie", size: "23cm", price: "$1500", image: "foto5.png" },
+    { name: "Lemon Pie", size: "23cm", price: "$1500", image: "tarta.png" },
     { name: "Tarta de durazno", size: "23cm", price: "$1100", image: null },
     { name: "Tarta dulce de leche y coco", size: "23cm", price: "$1300", image: null },
     { name: "Tarta tofi", size: "23cm", price: "$1600", image: null }
@@ -25,7 +26,7 @@ const products = {
   tortas: [
     { name: "Carrot Cake", size: "23cm / 18cm", price: "$2000 / $1300", image: null },
     { name: "Cheesecake", size: "23cm / 18cm", price: "$2100 / $1600", image: null },
-    { name: "Red Velvet", size: "23cm / 18cm", price: "$2000 / $1500", image: "foto7.avif" },
+    { name: "Red Velvet", size: "23cm / 18cm", price: "$2000 / $1500", image: "torta roja.avif" },
     { name: "Torta Brownie", size: "23cm / 18cm", price: "$1300 / $980", image: null }
   ],
   
@@ -42,12 +43,12 @@ const products = {
   
   raciones: [
     { name: "Magic Missile / Brioche", size: "6x$225 / 12x$420", price: "", image: null },
-    { name: "Charm Person / Pan 3 colores", size: "6x$148 / 12x$290", price: "", image: "foto6.png" },
+    { name: "Charm Person / Pan 3 colores", size: "6x$148 / 12x$290", price: "", image: "pan de colores.png" },
     { name: "Firebolt / Pan ajo y queso", size: "6x$200 / 12x$370", price: "", image: null },
     { name: "Magic Weapon / Palitos de queso", size: "6x$220 / 12x$370", price: "", image: null },
     { name: "Detect Magic / Chipa", size: "6x$230 / 12x$390", price: "", image: null },
     { name: "Tenser's Floating Disk / Bagels", size: "6x$270 / 12x$420", price: "", image: null },
-    { name: "Feather Fall / Focaccia", size: "Entera $500 / Porción $100", price: "", image: "foto4.png" }
+    { name: "Feather Fall / Focaccia", size: "Entera $500 / Porción $100", price: "", image: "focaccia.png" }
   ],
   
   kits: [
@@ -61,32 +62,110 @@ const products = {
 };
 
 // ========================================
-// RENDER PRODUCT CARDS
+// RENDER PRODUCT CARDS & MODAL LOGIC
 // ========================================
 
-function createProductCard(product) {
-  const price = product.price || product.size;
-  const size = product.price ? product.size : '';
+function renderProducts() {
+  const sections = {
+    'tartas-grid': 'tartas',
+    'hechizos-grid': 'hechizos',
+    'tortas-grid': 'tortas',
+    'bombas-grid': 'bombas',
+    'raciones-grid': 'raciones',
+    'kits-grid': 'kits'
+  };
   
-  return `
-    <article class="product-card">
-      <div class="product-card-decoration"></div>
-      <div class="product-card-inner">
-        <h3 class="product-name">${product.name}</h3>
-        ${size ? `<p class="product-size">${size}</p>` : ''}
-        ${price ? `<p class="product-price">${price}</p>` : ''}
-      </div>
-    </article>
-  `;
+  for (const [gridId, categoryKey] of Object.entries(sections)) {
+    const grid = document.getElementById(gridId);
+    if (!grid) continue;
+    
+    grid.innerHTML = products[categoryKey].map((product, index) => {
+      const price = product.price || product.size;
+      const imageUrl = product.image ? product.image : 'caldero tapado.webp';
+      const desc = product.desc || defaultDesc;
+      
+      const safeName = product.name.replace(/'/g, "\\'");
+      const safeDesc = desc.replace(/'/g, "\\'");
+      const safeImg = imageUrl.replace(/'/g, "\\'");
+      
+      const shortDesc = desc.length > 50 ? desc.substring(0, 50) + "..." : desc;
+        
+      return `
+        <article class="product-card" onclick="abrirModal('${safeName}', '${safeDesc}', '${safeImg}')">
+          <div class="product-card-decoration"></div>
+          <div class="product-image-container ${!product.image ? 'placeholder' : ''}">
+            <img src="${imageUrl}" loading="lazy" alt="${product.name}" class="product-image ${!product.image ? 'placeholder-img' : ''}">
+          </div>
+          <div class="product-card-inner">
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-short-desc">${shortDesc}</p>
+            ${price ? `<p class="product-price">${price}</p>` : ''}
+            <button class="consult-btn">Consultar al Alquimista</button>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
 }
 
-function renderProducts() {
-  document.getElementById('tartas-grid').innerHTML = products.tartas.map(createProductCard).join('');
-  document.getElementById('hechizos-grid').innerHTML = products.hechizos.map(createProductCard).join('');
-  document.getElementById('tortas-grid').innerHTML = products.tortas.map(createProductCard).join('');
-  document.getElementById('bombas-grid').innerHTML = products.bombas.map(createProductCard).join('');
-  document.getElementById('raciones-grid').innerHTML = products.raciones.map(createProductCard).join('');
-  document.getElementById('kits-grid').innerHTML = products.kits.map(createProductCard).join('');
+const defaultDesc = "Un antiguo secreto de la taberna, preparado con ingredientes místicos y amasado con paciencia. Seleccionado cuidadosamente de nuestro grimorio para deleitar el paladar de aventureros exigentes.";
+
+function abrirModal(nombre, desc, img) {
+  const modal = document.getElementById('modal-producto');
+  const imgEl = document.getElementById('modalImage');
+  const titleEl = document.getElementById('modalTitle');
+  const descEl = document.getElementById('modalDescription');
+  const sizeEl = document.getElementById('modalSize');
+  const priceEl = document.getElementById('modalPrice');
+  const waBtn = document.getElementById('modalWaBtn');
+  
+  titleEl.textContent = nombre;
+  descEl.textContent = desc;
+  
+  // Limpiamos los placeholders de size/price para no romper consistencia ya que se pasan via objeto usualmente
+  sizeEl.textContent = '';
+  priceEl.textContent = '';
+  
+  imgEl.src = img;
+  imgEl.style.opacity = img.includes('caldero tapado') ? '0.5' : '1';
+  
+  if (img.includes('caldero tapado')) {
+    imgEl.classList.add('placeholder-img');
+  } else {
+    imgEl.classList.remove('placeholder-img');
+  }
+  
+  const message = encodeURIComponent(`¡Hola Alquimista! Me interesa el producto: ${nombre}. ¿Me das más info?`);
+  
+  waBtn.href = "#"; // Evita saltos
+  waBtn.onclick = function(e) {
+    e.preventDefault();
+    window.open(`https://api.whatsapp.com/send?phone=${telefonoWhatsApp}&text=${message}`, '_blank');
+  };
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function initModal() {
+  const modal = document.getElementById('modal-producto');
+  const closeBtn = document.getElementById('modalClose');
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+  
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
 }
 
 // ========================================
@@ -318,25 +397,49 @@ function initNavigation() {
 
 function initCardTilt() {
   const cards = document.querySelectorAll('.product-card');
-  
+
   cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
+    let rect = null;
+    let rafId = null;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    function update() {
+      if (!rect) return;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      
-      const rotateX = (y - centerY) / 25;
-      const rotateY = (centerX - x) / 25;
-      
+
+      const rotateX = (mouseY - centerY) / 20;
+      const rotateY = (centerX - mouseX) / 20;
+
       card.style.transform = `perspective(1400px) translateZ(30px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-    
-    card.addEventListener('mouseleave', () => {
+      rafId = null;
+    }
+
+    function onPointerMove(e) {
+      rect = rect || card.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+
+      if (!rafId) rafId = requestAnimationFrame(update);
+    }
+
+    function onPointerEnter() {
+      rect = card.getBoundingClientRect();
+      card.style.willChange = 'transform';
+    }
+
+    function onPointerLeave() {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      rect = null;
       card.style.transform = 'perspective(1400px) translateZ(0) rotateX(0) rotateY(0)';
-    });
+      card.style.willChange = 'auto';
+    }
+
+    card.addEventListener('pointermove', onPointerMove);
+    card.addEventListener('pointerenter', onPointerEnter);
+    card.addEventListener('pointerleave', onPointerLeave);
+    card.addEventListener('pointercancel', onPointerLeave);
   });
 }
 
@@ -365,6 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
   
   // Initialize all features
+  initModal();
   initParticles();
   initNavigation();
   initScrollReveal();
