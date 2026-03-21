@@ -4,8 +4,9 @@
    ======================================== */
 
 // ========================================
-// PRODUCT DATA - MENÚ OFICIAL
+// CONFIGURATION & PRODUCT DATA
 // ========================================
+const telefonoWhatsApp = "5491160000000";
 
 const products = {
   tartas: [
@@ -80,19 +81,26 @@ function renderProducts() {
     
     grid.innerHTML = products[categoryKey].map((product, index) => {
       const price = product.price || product.size;
-      const size = product.price ? product.size : '';
-      const imageHtml = product.image 
-        ? `<div class="product-image-container"><img src="${product.image}" loading="lazy" alt="${product.name}" class="product-image"></div>`
-        : `<div class="product-image-container placeholder"><img src="caldero tapado.webp" loading="lazy" alt="Próximamente" class="product-image placeholder-img"></div>`;
+      const imageUrl = product.image ? product.image : 'caldero tapado.webp';
+      const desc = product.desc || defaultDesc;
+      
+      const safeName = product.name.replace(/'/g, "\\'");
+      const safeDesc = desc.replace(/'/g, "\\'");
+      const safeImg = imageUrl.replace(/'/g, "\\'");
+      
+      const shortDesc = desc.length > 50 ? desc.substring(0, 50) + "..." : desc;
         
       return `
-        <article class="product-card" onclick="verProducto('${categoryKey}', ${index})">
+        <article class="product-card" onclick="abrirModal('${safeName}', '${safeDesc}', '${safeImg}')">
           <div class="product-card-decoration"></div>
-          ${imageHtml}
+          <div class="product-image-container ${!product.image ? 'placeholder' : ''}">
+            <img src="${imageUrl}" loading="lazy" alt="${product.name}" class="product-image ${!product.image ? 'placeholder-img' : ''}">
+          </div>
           <div class="product-card-inner">
             <h3 class="product-name">${product.name}</h3>
-            ${size ? `<p class="product-size">${size}</p>` : ''}
+            <p class="product-short-desc">${shortDesc}</p>
             ${price ? `<p class="product-price">${price}</p>` : ''}
+            <button class="consult-btn">Consultar al Alquimista</button>
           </div>
         </article>
       `;
@@ -102,38 +110,37 @@ function renderProducts() {
 
 const defaultDesc = "Un antiguo secreto de la taberna, preparado con ingredientes místicos y amasado con paciencia. Seleccionado cuidadosamente de nuestro grimorio para deleitar el paladar de aventureros exigentes.";
 
-function verProducto(category, index) {
-  const product = products[category][index];
+function abrirModal(nombre, desc, img) {
   const modal = document.getElementById('modal-producto');
   const imgEl = document.getElementById('modalImage');
   const titleEl = document.getElementById('modalTitle');
+  const descEl = document.getElementById('modalDescription');
   const sizeEl = document.getElementById('modalSize');
   const priceEl = document.getElementById('modalPrice');
-  const descEl = document.getElementById('modalDescription');
   const waBtn = document.getElementById('modalWaBtn');
   
-  titleEl.textContent = product.name;
-  sizeEl.textContent = product.size ? `Tamaño / Tipo: ${product.size}` : '';
-  priceEl.textContent = product.price || '';
-  descEl.textContent = product.desc || defaultDesc;
+  titleEl.textContent = nombre;
+  descEl.textContent = desc;
   
-  if (product.image) {
-    imgEl.src = product.image;
-    imgEl.style.opacity = '1';
-    imgEl.classList.remove('placeholder-img');
-  } else {
-    imgEl.src = 'caldero tapado.webp';
-    imgEl.style.opacity = '0.5';
+  // Limpiamos los placeholders de size/price para no romper consistencia ya que se pasan via objeto usualmente
+  sizeEl.textContent = '';
+  priceEl.textContent = '';
+  
+  imgEl.src = img;
+  imgEl.style.opacity = img.includes('caldero tapado') ? '0.5' : '1';
+  
+  if (img.includes('caldero tapado')) {
     imgEl.classList.add('placeholder-img');
+  } else {
+    imgEl.classList.remove('placeholder-img');
   }
   
-  const phone = "5491160000000"; 
-  const message = encodeURIComponent(`¡Hola! Me interesa invocar este producto del Grimorio: ${product.name}`);
+  const message = encodeURIComponent(`¡Hola Alquimista! Me interesa el producto: ${nombre}. ¿Me das más info?`);
   
-  waBtn.href = "#"; // Evita saltos en la página
+  waBtn.href = "#"; // Evita saltos
   waBtn.onclick = function(e) {
     e.preventDefault();
-    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${message}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=${telefonoWhatsApp}&text=${message}`, '_blank');
   };
   
   modal.classList.add('active');
