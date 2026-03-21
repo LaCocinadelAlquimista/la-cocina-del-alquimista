@@ -731,3 +731,52 @@ body {
   .modal-info-col { padding: 25px 20px; }
   .modal-title { font-size: 2rem; }
 }
+
+/* ========================================
+   ADAPTACIÓN MOBILE (Celulares)
+   ======================================== */
+@media (max-width: 768px) {
+  
+  /* 1. Tipografía: Aumenta legibilidad base a 16px sin romper el diseño */
+  body {
+    font-size: 16px;
+  }
+
+  /* Modales: Ajusta el tamaño de los textos para que quepan bien */
+  .modal-description {
+    font-size: 1.05rem;
+  }
+
+  /* 2. Layout: Imágenes estéticas y bien proporcionadas */
+  .product-image-container {
+    height: 220px; /* Altura estética para que se vea bien la imagen sin ser invasiva */
+  }
+
+  /* 3. Botones Touch: Botón de WhatsApp más alto y de ancho completo para el pulgar */
+  .modal-wa-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 15px 20px;
+    box-sizing: border-box;
+  }
+
+  /* 4. Menú Superior: Asegura que el dropdown no tape tu Logo ni el ícono */
+  .navbar {
+    padding: 10px 20px; /* Reduce un poco el padding superior para dar espacio */
+    height: auto;
+  }
+  
+  /* Si usas un menú desplegable, esto lo empuja debajo de la barra */
+  .nav-menu {
+    top: 65px; 
+  }
+  
+  /* Modal de Layout: Ajusta el padding para que no se sienta apretado en celular */
+  .modal-info-col {
+    padding: 20px 15px;
+  }
+  
+  .modal-image-col {
+    padding: 15px;
+  }
+}
