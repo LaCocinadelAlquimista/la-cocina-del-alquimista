@@ -71,92 +71,104 @@ const allProducts = [
 // RENDER PRODUCTS
 // ========================================
 function renderProducts() {
-  const grid = document.getElementById('catalog-grid');
-  if (!grid) return;
+  const container = document.querySelector('.catalog-container');
+  if (!container) return;
 
-  grid.innerHTML = allProducts.map((product, index) => {
-    const imageUrl = product.image ? product.image : 'caldero tapado.webp';
-    const isPlaceholder = !product.image;
-    const desc = product.desc || defaultDesc;
+  const sectionsData = [
+    { id: 'tartas', title: 'Alquimia Dulce', subtitle: 'Tartas y postres con encanto', cat: 'tartas' },
+    { id: 'panes', title: 'Raciones del Viajero', subtitle: 'Panes recién salidos del horno mágico', cat: 'panes' },
+    { id: 'pascua', title: 'Especial de Pascua', subtitle: 'Ediciones limitadas para la festividad', cat: 'pascua' }
+  ];
 
-    const safeName = product.name.replace(/\'/g, "\\'");
-    const safeDesc = desc.replace(/\'/g, "\\'");
-    const safeImg = imageUrl.replace(/\'/g, "\\'");
+  let html = '';
 
-    return `
-      <article class="product-card" data-category="${product.category}" data-index="${index}">
-        <div class="product-image-container${isPlaceholder ? ' placeholder' : ''}">
-          <img src="${imageUrl}" loading="lazy" alt="${product.name}" class="product-image${isPlaceholder ? ' placeholder-img' : ''}">
+  sectionsData.forEach(section => {
+    const products = allProducts.filter(p => p.category === section.cat);
+    if (products.length === 0) return;
+
+    const withImage = products.filter(p => p.image);
+    const withoutImage = products.filter(p => !p.image);
+
+    html += `
+      <section id="${section.id}" class="catalog-section">
+        <div class="section-header">
+          <h2 class="section-title">${section.title}</h2>
+          <p class="section-subtitle">${section.subtitle}</p>
+          <div class="section-divider"></div>
         </div>
-        <div class="product-info">
-          <h3 class="product-name">${product.name}</h3>
-          <button class="consult-btn">Ver más</button>
-        </div>
-      </article>
     `;
-  }).join('');
+
+    // Visual Grid for images
+    if (withImage.length > 0) {
+      html += '<div class="products-grid">';
+      withImage.forEach(p => {
+        const desc = p.desc || defaultDesc;
+        const img = p.image;
+        const idx = allProducts.indexOf(p);
+        html += `
+          <article class="product-card" data-index="${idx}">
+            <div class="product-image-container">
+              <img src="${img}" loading="lazy" alt="${p.name}" class="product-image">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">${p.name}</h3>
+              <button class="consult-btn">Ver más</button>
+            </div>
+          </article>
+        `;
+      });
+      html += '</div>';
+    }
+
+    // Mystic list for without images
+    if (withoutImage.length > 0) {
+      html += '<div class="mystic-list">';
+      withoutImage.forEach(p => {
+        const desc = p.desc || defaultDesc;
+        const idx = allProducts.indexOf(p);
+        html += `
+          <div class="mystic-list-item" data-index="${idx}">
+            <div class="mystic-item-main">
+              <div class="mystic-item-header">
+                <span class="mystic-item-icon">✦</span>
+                <span class="mystic-item-name">${p.name} ${p.size ? `(${p.size})` : ''}</span>
+              </div>
+              <p class="mystic-item-desc">${desc}</p>
+            </div>
+            <div class="mystic-item-price">${p.price}</div>
+          </div>
+        `;
+      });
+      html += '</div>';
+    }
+
+    html += '</section>';
+  });
+
+  container.innerHTML = html;
+
   // Add event listeners (avoids VS Code inline onclick template literal errors)
-  grid.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const idx = card.getAttribute('data-index');
-      const p = allProducts[idx];
-      const desc = p.desc || defaultDesc;
-      const img = p.image ? p.image : 'caldero tapado.webp';
-      abrirModal(p.name, p.size, desc, img, p.price);
+  container.querySelectorAll('.product-card, .mystic-list-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.consult-btn')) return;
+      openModalForIndex(item.getAttribute('data-index'));
     });
   });
 
-  grid.querySelectorAll('.consult-btn').forEach(btn => {
+  container.querySelectorAll('.consult-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const card = e.target.closest('.product-card');
-      const idx = card.getAttribute('data-index');
-      const p = allProducts[idx];
-      const desc = p.desc || defaultDesc;
-      const img = p.image ? p.image : 'caldero tapado.webp';
-      abrirModal(p.name, p.size, desc, img, p.price);
+      openModalForIndex(card.getAttribute('data-index'));
     });
   });
 }
 
-// ========================================
-// FILTROS
-// ========================================
-function initFilters() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const grid = document.getElementById('catalog-grid');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Actualizar botón activo
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-      const cards = grid.querySelectorAll('.product-card');
-
-      cards.forEach((card, i) => {
-        const shouldShow = (filter === 'all' || card.dataset.category === filter);
-
-        if (shouldShow) {
-          // Remove hidden, restore visible with staggered delay
-          card.classList.remove('filter-hidden');
-          card.style.transitionDelay = `${i * 0.04}s`;
-          requestAnimationFrame(() => {
-            card.classList.add('visible');
-          });
-        } else {
-          // Fade out with opacity
-          card.style.transitionDelay = '0s';
-          card.classList.remove('visible');
-          // After fade completes, collapse from layout
-          setTimeout(() => {
-            card.classList.add('filter-hidden');
-          }, 350);
-        }
-      });
-    });
-  });
+function openModalForIndex(idx) {
+  const p = allProducts[idx];
+  const desc = p.desc || defaultDesc;
+  const img = p.image ? p.image : 'caldero tapado.webp';
+  abrirModal(p.name, p.size, desc, img, p.price);
 }
 
 // ========================================
@@ -374,7 +386,6 @@ function initNavbarScroll() {
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
-  initFilters();
   initModal();
   initParticles();
   initNavigation();

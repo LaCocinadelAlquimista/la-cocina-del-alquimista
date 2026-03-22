@@ -76,7 +76,7 @@ body {
 }
 
 /* ========================================
-   NAVBAR – Logo Centered Only
+   NAVBAR – Logo & Links
    ======================================== */
 .navbar {
   position: fixed;
@@ -98,7 +98,7 @@ body {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 .logo {
   font-family: var(--font-display);
@@ -113,48 +113,120 @@ body {
 .logo-icon {
   font-size: 1.3rem;
 }
+.nav-links {
+  display: flex;
+  gap: 16px;
+}
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s;
+}
+.nav-link:hover { color: var(--gold); }
+
+@media (max-width: 580px) {
+  .nav-container { flex-direction: column; gap: 10px; }
+  .nav-links { gap: 14px; }
+  .nav-link { font-size: 0.8rem; }
+}
 
 /* ========================================
-   CATEGORY FILTER – Touch Slider
+   SECTIONS
    ======================================== */
-.category-slider {
-  position: sticky;
-  top: 52px;
-  z-index: 900;
-  background: rgba(10,10,10,0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(212,175,55,0.15);
-  display: flex;
-  gap: 10px;
-  padding: 12px 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+.catalog-section {
+  padding-top: 100px;
+  margin-top: -80px;
+  margin-bottom: 70px;
 }
-.category-slider::-webkit-scrollbar { display: none; }
-
-.filter-btn {
-  flex-shrink: 0;
-  background: transparent;
-  border: 1.5px solid var(--gold);
+.section-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
   color: var(--gold);
-  padding: 8px 20px;
-  border-radius: 24px;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
+  margin-bottom: 8px;
+}
+.section-subtitle {
+  font-size: 0.95rem;
+  color: var(--white);
+  opacity: 0.7;
+  font-style: italic;
+}
+.section-divider {
+  width: 60px;
+  height: 2px;
+  background: var(--red);
+  margin: 16px auto 0;
+}
+
+/* ========================================
+   MYSTIC LIST (Text only items)
+   ======================================== */
+.mystic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+.mystic-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(253,250,243, 0.03);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 6px;
   cursor: pointer;
   transition: var(--ease);
-  letter-spacing: 0.5px;
+}
+.mystic-list-item:hover {
+  background: rgba(212,175,55,0.08);
+  border-color: var(--gold);
+  transform: translateX(4px);
+}
+.mystic-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding-right: 16px;
+}
+.mystic-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mystic-item-icon {
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+.mystic-item-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold-light);
+}
+.mystic-item-desc {
+  font-size: 0.85rem;
+  color: var(--white);
+  opacity: 0.75;
+}
+.mystic-item-price {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
   white-space: nowrap;
 }
-.filter-btn:hover {
-  background: rgba(212,175,55,0.15);
-}
-.filter-btn.active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--black);
+@media (max-width: 580px) {
+  .mystic-list-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .mystic-item-price { align-self: flex-end; }
 }
 
 /* ========================================
@@ -276,19 +348,6 @@ body {
 .product-card.visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Filter animation: fade out instead of display:none */
-.product-card.filter-hidden {
-  opacity: 0 !important;
-  transform: scale(0.92) translateY(8px) !important;
-  pointer-events: none;
-  position: absolute;
-  visibility: hidden;
-}
-.product-card:not(.filter-hidden) {
-  position: relative;
-  visibility: visible;
 }
 
 .product-card:hover {
@@ -556,8 +615,6 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
-  .category-slider { top: 56px; padding: 12px 24px; gap: 12px; }
-  .filter-btn { font-size: 0.9rem; padding: 8px 22px; }
   .catalog-container { padding: 32px 24px 80px; }
 }
 
