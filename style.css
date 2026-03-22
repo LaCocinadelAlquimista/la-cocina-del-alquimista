@@ -181,16 +181,16 @@ body {
 }
 .info-block {
   background: var(--black-soft);
-  border: 1px solid var(--gold);
+  border: 1.5px solid var(--gold);
   border-radius: var(--radius-card);
   padding: 30px 20px;
   text-align: center;
   transition: var(--ease);
-  box-shadow: 0 4px 16px rgba(212,175,55,0.15);
+  box-shadow: 0 4px 20px rgba(212,175,55,0.35);
 }
 .info-block:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(212,175,55,0.25);
+  box-shadow: 0 8px 28px rgba(212,175,55,0.6);
 }
 .info-block h3 {
   color: var(--gold);
