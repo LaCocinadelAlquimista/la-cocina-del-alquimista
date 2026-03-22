@@ -131,7 +131,7 @@ function renderProducts() {
             <div class="mystic-item-main">
               <div class="mystic-item-header">
                 <span class="mystic-item-icon">✦</span>
-                <span class="mystic-item-name">${p.name} ${p.size ? \`(\${p.size})\` : ''}</span>
+                <span class="mystic-item-name">${p.name} ${p.size ? `(${p.size})` : ''}</span>
               </div>
               <p class="mystic-item-desc">${desc}</p>
             </div>
