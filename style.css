@@ -166,57 +166,48 @@ body {
 }
 
 /* ========================================
-   INFORMACIÓN DE PEDIDO (STICKY)
+   INFORMACIÓN IMPORTANTE (FOOTER)
    ======================================== */
-.info-sticky {
-  position: sticky;
-  top: 55px; /* Altura de la navbar en scroll */
-  z-index: 90;
-  background: rgba(20, 20, 20, 0.85); /* Equivalente a var(--black-soft) con transparencia */
-  backdrop-filter: blur(5px);
-  border-bottom: 1px solid var(--gold);
-  border-top: 1px solid var(--gold);
-  padding: 8px 16px;
-  width: 100%;
+.info-footer {
+  background: var(--black-soft);
+  border-top: 2px solid var(--gold);
+  padding: 40px 20px;
+  text-align: center;
   font-family: var(--font-body);
 }
-.info-sticky-content {
+.info-footer-title {
+  font-family: var(--font-display);
+  color: var(--gold);
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+.info-footer-grid {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  align-items: center;
+  gap: 24px;
 }
-.info-item {
-  color: var(--white);
-  font-size: 0.8rem;
-  text-align: center;
+.info-footer-block {
+  flex: 1;
 }
-.info-item span {
-  display: inline-block;
-  margin-right: 4px;
-}
-.info-item strong {
-  color: var(--gold);
+.info-footer-block h3 {
+  color: var(--gold-light);
+  font-size: 1.2rem;
+  margin-bottom: 8px;
   font-family: var(--font-display);
-  font-size: 0.9rem;
+}
+.info-footer-block p {
+  color: var(--white);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 @media (min-width: 768px) {
-  .info-sticky {
-    top: 60px; /* Un poco más espaciado en desktop */
-    padding: 12px 24px;
-  }
-  .info-sticky-content {
+  .info-footer-grid {
     flex-direction: row;
-    justify-content: space-around;
-  }
-  .info-item {
-    font-size: 0.95rem;
-  }
-  .info-item strong {
-    font-size: 1.05rem;
+    justify-content: space-between;
+    gap: 40px;
   }
 }
 
@@ -370,7 +361,7 @@ body {
 .main-content {
   position: relative;
   z-index: 1;
-  padding-top: 80px; /* Compensación para la info-sticky */
+  padding-top: 20px;
 }
 .catalog-container {
   max-width: 1200px;
