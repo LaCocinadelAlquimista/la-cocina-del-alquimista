@@ -2,7 +2,7 @@
    LA COCINA DEL ALQUIMISTA - JavaScript
    ======================================== */
 
-const telefonoWhatsApp = "5491160000000";
+const telefonoWhatsApp = "59894805487";
 
 // Descripción por defecto
 const defaultDesc = "Un antiguo secreto de la taberna, preparado con ingredientes místicos y amasado con paciencia. Para aventureros exigentes.";
